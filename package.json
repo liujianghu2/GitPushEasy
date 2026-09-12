@@ -1,0 +1,96 @@
+{
+  "name": "gitpush-easy",
+  "productName": "小白推送",
+  "version": "1.0.0",
+  "description": "轻量、易懂的 GitHub 上传推送工具：选文件夹，点一下就能传上去。",
+  "author": {
+    "name": "GitPush Easy",
+    "email": "noreply@example.com"
+  },
+  "license": "MIT",
+  "private": true,
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "icon": "python tools/gen_icon.py",
+    "fix:cache": "node tools/fix-wincodesign-cache.js",
+    "rcedit": "node tools/rcedit-app.js",
+    "stop:app": "taskkill /F /IM GitPushEasy.exe /T & taskkill /F /IM GitPushEasy-1.0.0-绿色版.exe /T & exit /b 0",
+    "build": "npm run build:all",
+    "build:step1": "electron-builder --win --dir",
+    "build:step3": "electron-builder --win nsis portable --prepackaged dist/win-unpacked",
+    "build:installer": "electron-builder --win nsis --prepackaged dist/win-unpacked",
+    "build:portable": "electron-builder --win portable --prepackaged dist/win-unpacked",
+    "build:dir": "electron-builder --win --dir",
+    "test": "node tools/test-git-engine.js && node tools/test-auth-flow.js && node tools/test-repo-link.js && node tools/test-login-endpoints.js && node tools/test-history.js",
+    "test:ui": "electron tools/smoke.js",
+    "test:account": "electron tools/test-account.js",
+    "build:all": "npm run stop:app & npm run build:step1 && npm run rcedit && npm run build:step3"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.gitpusheasy.app",
+    "productName": "GitPushEasy",
+    "copyright": "Copyright © 2025 GitPush Easy",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.ico",
+      "!**/*.map",
+      "!**/node_modules/**/*"
+    ],
+    "extraMetadata": {
+      "main": "src/main/main.js"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false,
+      "verifyUpdateCodeSignature": false
+    },
+    "portable": {
+      "artifactName": "GitPushEasy-${version}-绿色版.${ext}",
+      "unicode": true,
+      "requestExecutionLevel": "user"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "小白推送",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true,
+      "menuCategory": false,
+      "artifactName": "GitPushEasy-${version}-安装程序.${ext}",
+      "uninstallDisplayName": "小白推送 GitPushEasy",
+      "include": "build/installer.nsh"
+    }
+  }
+}

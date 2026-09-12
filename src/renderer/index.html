@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <!-- 只允许加载本应用自己的资源;外部请求一律走主进程 -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none';
+                 script-src 'self';
+                 style-src 'self' 'unsafe-inline';
+                 img-src 'self' data: https://avatars.githubusercontent.com https://*.githubusercontent.com;
+                 font-src 'self';
+                 connect-src 'none';
+                 frame-src 'none';
+                 object-src 'none';
+                 base-uri 'none';
+                 form-action 'none';">
+  <title>小白推送 · GitPushEasy</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ================================================== SVG 图形库 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gradLogo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3fb878"/><stop offset="1" stop-color="#24895a"/>
+    </linearGradient>
+    <linearGradient id="gradMtnA" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8d8c2"/><stop offset="1" stop-color="#d8ece2"/>
+    </linearGradient>
+    <linearGradient id="gradMtnB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc4a3"/><stop offset="1" stop-color="#b8dfcd"/>
+    </linearGradient>
+    <linearGradient id="gradSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dff0e8"/><stop offset="1" stop-color="#f4fbf7"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div id="app">
+
+  <!-- ================================================== 侧边栏 -->
+  <aside class="sidebar">
+    <div class="side-brand">
+      <svg class="logo" viewBox="0 0 100 100" aria-hidden="true">
+        <rect width="100" height="100" rx="23" fill="url(#gradLogo)"/>
+        <g fill="#fff">
+          <rect x="40.5" y="46" width="19" height="20"/>
+          <polygon points="50,19 73,50 27,50"/>
+          <circle cx="24" cy="83" r="5.2"/><circle cx="50" cy="83" r="7.4"/><circle cx="76" cy="83" r="5.2"/>
+        </g>
+        <line x1="24" y1="83" x2="76" y2="83" stroke="#fff" stroke-opacity=".66" stroke-width="2"/>
+      </svg>
+      <div class="txt">
+        <div class="name">小白推送</div>
+        <div class="slogan">让上传更简单</div>
+      </div>
+    </div>
+
+    <nav class="side-nav" id="sideNav">
+      <button class="nav-btn" data-view="home" type="button">
+        <span class="ni" data-icon="home"></span>
+        <span class="lbl-txt">首页</span>
+      </button>
+      <button class="nav-btn" data-view="projects" type="button">
+        <span class="ni" data-icon="folder"></span>
+        <span class="lbl-txt">项目</span>
+      </button>
+      <button class="nav-btn" data-view="records" type="button">
+        <span class="ni" data-icon="history"></span>
+        <span class="lbl-txt">上传记录</span>
+      </button>
+      <button class="nav-btn" data-view="history" type="button">
+        <span class="ni" data-icon="branch"></span>
+        <span class="lbl-txt">提交历史</span>
+      </button>
+
+      <div class="flex-spacer"></div>
+
+      <button class="nav-btn" id="navKbTutorial" type="button">
+        <span class="ni" data-icon="book"></span>
+        <span class="lbl-txt">Git 小课堂</span>
+      </button>
+      <button class="nav-btn" id="navKbCommands" type="button">
+        <span class="ni" data-icon="terminal"></span>
+        <span class="lbl-txt">命令速查</span>
+      </button>
+      <button class="nav-btn" id="navSettings" type="button">
+        <span class="ni" data-icon="settings"></span>
+        <span class="lbl-txt">设置</span>
+      </button>
+    </nav>
+
+    <div class="side-foot">
+      <div class="side-quote">小小的上传<br>也能让世界更好一点</div>
+      <svg class="side-mtn" viewBox="0 0 132 62" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 62 V38 L26 16 L52 40 L74 22 L104 48 L132 32 V62 Z" fill="url(#gradMtnA)" opacity=".65"/>
+        <path d="M0 62 V48 L30 30 L58 50 L84 34 L112 54 L132 44 V62 Z" fill="url(#gradMtnB)" opacity=".55"/>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ================================================== 顶栏 -->
+  <header class="topbar">
+    <div class="topbar-spacer"></div>
+    <div id="accountBox"></div>
+    <button class="icon-btn" id="themeBtn" type="button" title="切换主题" aria-label="切换主题"></button>
+    <button class="icon-btn" id="kbBtn" type="button" title="Git 知识库(快捷键 Ctrl+K)" aria-label="打开 Git 知识库">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 6.4h5.2a2.4 2.4 0 0 1 2.4 2.4v10.4a1.9 1.9 0 0 0-1.9-1.9H3.4z"/><path d="M20.6 6.4h-5.2a2.4 2.4 0 0 0-2.4 2.4v10.4a1.9 1.9 0 0 1 1.9-1.9h5.7z"/></svg>
+    </button>
+  </header>
+
+  <!-- ================================================== 主区域 -->
+  <main class="main">
+
+    <!-- ---------- 首页:选择文件夹 ---------- -->
+    <section class="view" id="view-home">
+      <div class="page">
+        <div class="page-main" id="homeMain"></div>
+        <div class="page-side" id="homeSide"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 项目 ---------- -->
+    <section class="view" id="view-projects">
+      <div class="page single">
+        <div class="page-main" id="projectsMain"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 上传记录 ---------- -->
+    <section class="view" id="view-records">
+      <div class="page single">
+        <div class="page-main" id="recordsMain"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 提交历史 ---------- -->
+    <section class="view" id="view-history">
+      <div class="page">
+        <div class="page-main" id="historyMain"></div>
+        <div class="page-side" id="historySide"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 登录 ---------- -->
+    <section class="view" id="view-login">
+      <div class="page">
+        <div class="page-main" id="loginMain"></div>
+        <div class="page-side" id="loginSide"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 查看变更 ---------- -->
+    <section class="view" id="view-changes">
+      <div class="page">
+        <div class="page-main" id="changesMain"></div>
+        <div class="page-side" id="changesSide"></div>
+      </div>
+    </section>
+
+    <!-- ---------- 上传结果 ---------- -->
+    <section class="view" id="view-status">
+      <div class="page single">
+        <div class="page-main" id="statusMain"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ================================================== 浮动按钮 -->
+<div class="fab-row">
+  <button class="fab" id="fabHelp" type="button" title="这一步该怎么做?">?</button>
+</div>
+
+<!-- 上传中的悬浮状态 -->
+<div class="float-status" id="floatStatus">
+  <span class="pulse"></span>
+  <strong id="floatLabel">正在上传…</strong>
+  <span class="fs-text" id="floatDetail"></span>
+</div>
+
+<!-- ================================================== Toast -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- ================================================== 设置抽屉 -->
+<div class="overlay-mask" id="settingsMask"></div>
+<aside class="drawer" id="settingsDrawer" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="drawer-head">
+    <h2 id="settingsTitle">设置</h2>
+    <button class="x-btn" id="settingsClose" type="button" aria-label="关闭" data-icon="close"></button>
+  </div>
+  <div class="drawer-body" id="settingsBody"></div>
+  <div class="drawer-foot">
+    <button class="btn" id="settingsCancel" type="button">取消</button>
+    <button class="btn primary" id="settingsSave" type="button">保存设置</button>
+  </div>
+</aside>
+
+<!-- ================================================== 知识库 -->
+<div class="overlay-mask" id="kbMask"></div>
+<section class="dialog" id="kbPanel" role="dialog" aria-modal="true" aria-labelledby="kbTitle">
+  <div class="dialog-head">
+    <div>
+      <div class="dh-title" id="kbTitle">Git 知识库</div>
+      <div class="dh-sub">这里没有"必须看完"的东西 —— 需要的时候来查一下就行</div>
+    </div>
+    <div style="flex:1"></div>
+    <div class="search-box">
+      <span class="s-ico" data-icon="search"></span>
+      <input class="input" id="kbSearch" type="search" placeholder="搜命令、搜报错、搜概念…(Ctrl+K)">
+    </div>
+    <button class="x-btn" id="kbClose" type="button" aria-label="关闭" data-icon="close"></button>
+  </div>
+
+  <nav class="tabs" id="kbTabs" style="padding:8px 16px 0;margin:0;background:var(--bg-card)">
+    <button class="tab active" data-kbtab="concepts" type="button">核心概念</button>
+    <button class="tab" data-kbtab="diagrams" type="button">流程图解</button>
+    <button class="tab" data-kbtab="tutorials" type="button">分步教程</button>
+    <button class="tab" data-kbtab="commands" type="button">命令速查</button>
+    <button class="tab" data-kbtab="troubleshoot" type="button">报错对照</button>
+    <button class="tab" data-kbtab="cheat" type="button">一分钟小抄</button>
+  </nav>
+
+  <div class="kb-body">
+    <nav class="kb-nav" id="kbNav"></nav>
+    <article class="kb-content selectable" id="kbContent"></article>
+  </div>
+</section>
+
+<!-- ================================================== 脚本(顺序即依赖顺序) -->
+<script src="js/knowledge.js"></script>
+<script src="js/util.js"></script>
+<script src="js/art.js"></script>
+<script src="js/state.js"></script>
+<script src="js/view-login.js"></script>
+<script src="js/view-home.js"></script>
+<script src="js/view-projects.js"></script>
+<script src="js/view-history.js"></script>
+<script src="js/view-changes.js"></script>
+<script src="js/view-repo.js"></script>
+<script src="js/view-status.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/kb.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
